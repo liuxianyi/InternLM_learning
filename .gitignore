@@ -1,0 +1,7 @@
+__pycache__
+# 训练结果
+work_dirs
+# hf 转换的模型储存位置
+cvt_hf 
+# lora与基座模型合并模型储存位置
+merged_model
