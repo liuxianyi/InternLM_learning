@@ -87,7 +87,7 @@ def use_api(tools, response):
 
 
 if __name__ == "__main__":
-    model_path = "/root/share/model_repos/internlm2-chat-20b-4bits"
+    model_path = "/root/share/model_repos/internlm-chat-7b"
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=model_path, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(pretrained_model_name_or_path=model_path, trust_remote_code=True)
     model.eval()
@@ -147,19 +147,15 @@ if __name__ == "__main__":
         }
     ]
 
-    prompt_one = build_planning_prompt(TOOLS[0:3], query="中国人口多少")
+    prompt_one = build_planning_prompt(TOOLS[0:3], query="中国人口多少") # 构建prompt
     print(prompt_one)
 
-
-    stop = ["Observation:", "Observation:\\n"]
-    react_stop_words_tokens = [tokenizer.encode(stop_) for stop_ in stop]
-    response_one, _ = model.chat(tokenizer, prompt_one, history=[])
+    response_one, _ = model.chat(tokenizer, prompt_one, history=[]) # Thought
     print(response_one)
 
     api_output = use_api(TOOLS, response_one) # 解析Thought，调用插件获得结果
 
-
-    prompt_2 = prompt_one + '\\n' + response_one + ' ' + api_output # 拼接所有结果，总结答案。
-    response_2, _ = model.chat(tokenizer, prompt_2, history=[])
+    prompt_2 = prompt_one + '\\n' + response_one + ' ' + api_output # 拼接所有结果
+    response_2, _ = model.chat(tokenizer, prompt_2, history=[]) # 总结答案
     print(prompt_2, "\\n", response_2)
 
